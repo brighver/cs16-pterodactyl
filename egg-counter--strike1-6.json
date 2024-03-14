@@ -1,0 +1,72 @@
+{
+    "_comment": "DO NOT EDIT: FILE GENERATED AUTOMATICALLY BY PTERODACTYL PANEL - PTERODACTYL.IO",
+    "meta": {
+        "version": "PTDL_v2",
+        "update_url": null
+    },
+    "exported_at": "2024-03-14T18:18:06+07:00",
+    "name": "Counter-Strike 1.6",
+    "author": "hembi@example.com",
+    "description": "Counter-Strike: 1.6 is a multiplayer first-person shooter video game developed by Valve Corporation.",
+    "features": null,
+    "docker_images": {
+        "ghcr.io\/pterodactyl\/games:source": "ghcr.io\/pterodactyl\/games:source"
+    },
+    "file_denylist": [],
+    "startup": ".\/hlds_run -pidfile hlds_{{SERVER_PORT}} -game cstrike -{{SRV_SECURE}} +port {{SERVER_PORT}} +sv_lan 0 +maxplayers {{SRV_SLOTS}} +map {{SRV_STARTMAP}} +sys_ticrate 1200 -pingboost {{SRV_PINGBOOST}} -norestart",
+    "config": {
+        "files": "{}",
+        "startup": "{\r\n    \"done\": \"Connection to Steam servers successful.\",\r\n    \"userInteraction\": []\r\n}",
+        "logs": "{\r\n    \"custom\": true,\r\n    \"location\": \"logs\/latest.log\"\r\n}",
+        "stop": "quit"
+    },
+    "scripts": {
+        "installation": {
+            "script": "apt -y update\r\napt -y --no-install-recommends install curl lib32gcc1 ca-certificates\r\napt -y --no-install-recommends DEBIAN_FRONTEND=noninteractive install tzdata\r\napt -y --no-install-recommends DEBIAN_FRONTEND=noninteractive install lib32gcc1 libsdl2-2.0-0:i386 screen wget\r\ncd \/tmp\r\nmkdir -p \/mnt\/server\/steamcmd\r\ncurl -sSL -o steamcmd.tar.gz https:\/\/steamcdn-a.akamaihd.net\/client\/installer\/steamcmd_linux.tar.gz\r\ntar -xzvf steamcmd.tar.gz -C \/mnt\/server\/steamcmd\r\ncd \/mnt\/server\/steamcmd\r\nchown -R root:root \/mnt\r\nexport HOME=\/mnt\/server\r\n.\/steamcmd.sh +@sSteamCmdForcePlatformBitness 32 +force_install_dir \/mnt\/server +login anonymous +app_update \"90 -beta Beta\" validate +quit\r\n.\/steamcmd.sh +@sSteamCmdForcePlatformBitness 32 +force_install_dir \/mnt\/server +login anonymous +app_update \"90 -beta Beta\" validate +quit\r\n.\/steamcmd.sh +@sSteamCmdForcePlatformBitness 32 +force_install_dir \/mnt\/server +login anonymous +app_update \"90 -beta Beta\" validate +quit\r\nmkdir -p \/mnt\/server\/.steam\/sdk32\r\ncp -v linux32\/steamclient.so ..\/.steam\/sdk32\/steamclient.so\r\nmkdir -p \/mnt\/server\/.steam\/sdk64\r\ncp -v linux64\/steamclient.so ..\/.steam\/sdk64\/steamclient.so",
+            "container": "ubuntu:20.04",
+            "entrypoint": "bash"
+        }
+    },
+    "variables": [
+        {
+            "name": "Secure or Insecure",
+            "description": "",
+            "env_variable": "SRV_SECURE",
+            "default_value": "secure",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "Max Players (Slots)",
+            "description": "",
+            "env_variable": "SRV_SLOTS",
+            "default_value": "32",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "Startmap",
+            "description": "",
+            "env_variable": "SRV_STARTMAP",
+            "default_value": "de_dust2",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        },
+        {
+            "name": "Pingboost",
+            "description": "",
+            "env_variable": "SRV_PINGBOOST",
+            "default_value": "2",
+            "user_viewable": true,
+            "user_editable": true,
+            "rules": "required|string|max:20",
+            "field_type": "text"
+        }
+    ]
+}
